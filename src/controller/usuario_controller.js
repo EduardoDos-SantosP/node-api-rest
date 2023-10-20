@@ -2,6 +2,14 @@ const Usuario = require('../model/usuario.js')
 const { validationResult } = require('express-validator')
 
 module.exports = {
+    login: async (req, res) => {
+        const usuario = await Usuario.findOne({ email: req.body.email })
+        if (!usuario || !(await usuario.compareSenha(req.body.senha)))
+            return res.status(400).json({ error: 'Credenciais incorretas' })
+        await usuario.createToken()
+            .then(res.status(200).json)
+            .catch(res.status(401).json)
+    },
     all: async (req, res) => {
         const itens = await Usuario.find()
         res.json(itens)
@@ -25,10 +33,11 @@ module.exports = {
         }
     },
     edit: async (req, res) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty())
+        const errors = validationResult(req).array()
+            .filter(v => v.path in req.body)
+        if (errors.length)
             return res.status(400)
-                .json({ errors: errors.array() })
+                .json({ errors })
         try {
             const usuario = await Usuario
                 .findOneAndUpdate(

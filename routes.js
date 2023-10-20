@@ -8,6 +8,7 @@ router.get('/' , (req , res) => {
     res.json({ ok: true })
 })
 
+router.post('/login', usuario_controller.login)
 router.get('/usuario', usuario_controller.all)
 router.post('/usuario', usuario_validator.validate, usuario_controller.add)
 router.put('/usuario/:id', usuario_validator.validate, usuario_controller.edit)
