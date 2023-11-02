@@ -10,10 +10,10 @@ const Usuario = new mongoose.Schema({
     tipo: { type: String, enum: ['cliente', 'prestador'] }
 })
 
-Usuario.statics.getNextAutoIncrement = async function () {
-    const usuario = await this.findOne({}, {}, { sort: { id: -1 } });
-    return usuario ? usuario.id + 1 : 1;
-}
+// Usuario.statics.getNextAutoIncrement = async function () {
+//     const usuario = await this.findOne({}, {}, { sort: { id: -1 } });
+//     return usuario ? usuario.id + 1 : 1;
+// }
 
 Usuario.pre('save', function (next) {
     const usuario = this
