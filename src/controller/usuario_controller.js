@@ -6,9 +6,8 @@ module.exports = {
         const usuario = await Usuario.findOne({ email: req.body.email })
         if (!usuario || !(await usuario.compareSenha(req.body.senha)))
             return res.status(400).json({ error: 'Credenciais incorretas' })
-        await usuario.createToken()
-            .then(res.status(200).json)
-            .catch(res.status(401).json)
+
+        return res.json(await usuario.createToken())
     },
     all: async (req, res) => {
         const itens = await Usuario.find()
@@ -35,16 +34,17 @@ module.exports = {
     edit: async (req, res) => {
         const errors = validationResult(req).array()
             .filter(v => v.path in req.body)
+
         if (errors.length)
             return res.status(400)
                 .json({ errors })
         try {
-            const usuario = await Usuario
-                .findOneAndUpdate(
-                    { _id: req.params.id },
-                    req.body,
-                    { returnDocument: "after" }
-                )
+            const usuario = await Usuario.findOne({ _id: req.params.id })
+
+            for (const prop in req.body)
+                usuario[prop] = req.body[prop]
+            await usuario.save()
+
             res.json(usuario)
         } catch (ex) {
             if (ex.path !== '_id') throw ex

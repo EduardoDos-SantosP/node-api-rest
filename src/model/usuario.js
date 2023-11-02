@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 mongoose.Promise = global.Promise
 
 const Usuario = new mongoose.Schema({
-    id: Number,
     nome: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     senha: { type: String, required: true },
@@ -16,13 +15,13 @@ Usuario.statics.getNextAutoIncrement = async function () {
     return usuario ? usuario.id + 1 : 1;
 }
 
-Usuario.pre('save', async function (next) {
+Usuario.pre('save', function (next) {
     const usuario = this
-    console.log('presave')
     if (usuario.isNew || usuario.isModified('senha'))
         try {
-            const salt = await bcrypt.genSalt(10)
-            usuario.senha = await bcrypt.hash(usuario.senha, salt)
+            console.log(new Date().toLocaleTimeString())
+            const salt = bcrypt.genSaltSync(10)
+            usuario.senha = bcrypt.hashSync(usuario.senha, salt)
         } catch (e) {
             next(e)
         }
@@ -38,7 +37,7 @@ Usuario.methods.createToken = function () {
     const expiresIn = '2h'
     return new Promise((res, rej) => {
         try {
-            const token = jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn })
+            const token = jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn }, null)
             res({ token })
         } catch (error) {
             rej({ error })
