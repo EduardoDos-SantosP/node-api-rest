@@ -5,6 +5,7 @@ module.exports = function Controller(schema) {
     return {
         all: async (req, res) => {
             const itens = await schema.find()
+            console.log(itens)
             res.json(itens)
         },
         add: async (req, res) => {

@@ -1,4 +1,4 @@
-const Controller = require('controller.js');
+const Controller = require('./controller.js');
 const Servico = require('../model/servico.js')
 
 module.exports = {

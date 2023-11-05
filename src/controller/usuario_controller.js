@@ -1,4 +1,4 @@
-const Controller = require('controller.js')
+const Controller = require('./controller.js')
 const Usuario = require('../model/usuario.js')
 
 module.exports = {
