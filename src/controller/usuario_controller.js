@@ -8,6 +8,7 @@ module.exports = {
         if (!usuario || !(await usuario.compareSenha(req.body.senha)))
             return res.status(400).json({ error: 'Credenciais incorretas' })
 
-        return res.json(await usuario.createToken())
+        const token = await usuario.createToken()
+        return res.json(token)
     }
 }

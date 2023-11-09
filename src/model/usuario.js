@@ -17,7 +17,7 @@ const Usuario = new mongoose.Schema({
 
 Usuario.pre('save', function (next) {
     const usuario = this
-    if (usuario.isNew || usuario.isModified('senha'))
+    if (usuario.isNew || usuario.isModified?.('senha'))
         try {
             console.log(new Date().toLocaleTimeString())
             const salt = bcrypt.genSaltSync(10)
