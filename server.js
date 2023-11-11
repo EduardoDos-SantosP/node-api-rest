@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const routes = require('./routes')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 const Usuario = require('./src/model/usuario.js')
 
 //conexao com banco dados

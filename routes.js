@@ -1,24 +1,22 @@
-const express = require('express')
-const usuario_controller = require('./src/controller/usuario_controller.js')
-const router = express.Router()
+const usuarioController = require('./src/controller/usuario_controller.js')
+const servicoController = require('./src/controller/servico_controller.js')
+const usuarioValidator = require('./src/validator/usuario_validator.js')
+
+const router = require('express').Router()
 
 router.get('/', (req, res) => {
     res.json({ ok: true })
 })
 
-const models = ['usuario', 'servico']
-models.forEach(model => {
-    const controller = require(`./src/controller/${model}_controller.js`)
-    const validator = (() => {
-        try { return require(`./src/validator/${model}_validator.js`) }
-        catch { return null }
-    })()
-    router.get(`/${model}`, controller.all)
-    router.post(`/${model}`, ...[validator?.validate, controller.add].filter(m => m))
-    router.put(`/${model}/:id`, ...[validator?.validate, controller.edit].filter(m => m))
-    router.patch(`/${model}/:id`, ...[validator?.validate, controller.edit].filter(m => m))
-    router.delete(`/${model}/:id`, controller.delete)
-})
-router.post('/login', usuario_controller.login)
+router.get('/usuario', usuarioController.all)
+router.post('/usuario', usuarioValidator.validate, usuarioController.add)
+router.put('/usuario/:id', usuarioValidator.validate, usuarioController.edit)
+router.delete('/usuario/:id', usuarioController.delete)
+router.post('/login', usuarioController.login)
+
+router.get('/servico', servicoController.all)
+router.post('/servico', servicoController.add)
+router.put('/servico/:id', servicoController.edit)
+router.delete('/servico/:id', servicoController.delete)
 
 module.exports = router
