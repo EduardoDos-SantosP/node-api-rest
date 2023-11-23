@@ -11,7 +11,7 @@
  */
 
 require('../server.js')
-const url = 'http://localhost:8000'
+const url = 'http://localhost:' + process.env.PORT
 
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -23,7 +23,7 @@ describe('Testando fluxo da API', () => {
     const client = chai.request(url)
     const usuario = {
         nome: 'Test',
-        email: 'test@gmail.com',
+        login: 'test@gmail.com',
         senha: '123',
         tipo: 'prestador'
     }

@@ -7,7 +7,7 @@ module.exports = {
                 errorMessage: 'Nome é obrigatório'
             }
         },
-        email: {
+        login: {
             isEmail: {
                 errorMessage: 'E-mail é obrigatório'
             }

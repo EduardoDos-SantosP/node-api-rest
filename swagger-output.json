@@ -95,7 +95,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
+                "login": {
                   "example": "any"
                 },
                 "senha": {
