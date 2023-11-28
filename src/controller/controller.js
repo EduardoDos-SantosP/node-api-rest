@@ -21,11 +21,9 @@ module.exports = function Controller(schema) {
                 model[prop] = req.body[prop]
 
             try {
-                console.dir(model)
                 await model.save()
                 res.json(model)
             } catch (error) {
-                console.dir({ error })
                 res.json({ error })
             }
         },
