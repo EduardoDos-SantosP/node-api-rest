@@ -1,7 +1,15 @@
 const { validationResult } = require("express-validator");
 
-/** @param schema: Model */
+/** @param schema: {module:mongoose.Model} */
 module.exports = function Controller(schema) {
+
+    /** @type {function(Request, module:mongoose.Model?): module:mongoose.Model} */
+    const modelFromRequest = (req, model = new schema()) => {
+        for (let prop in schema.schema.obj)
+            model[prop] = req.body[prop]
+        return model;
+    }
+
     return {
         all: async (req, res) => {
             const itens = await schema.find()
@@ -9,17 +17,12 @@ module.exports = function Controller(schema) {
             res.json(itens)
         },
         add: async (req, res) => {
-            delete req.body.id
             const errors = validationResult(req)
             if (!errors.isEmpty())
                 return res.status(400)
                     .json({ errors: errors.array() })
 
-            const model = new schema()
-
-            for (const prop in req.body)
-                model[prop] = req.body[prop]
-
+            const model = modelFromRequest(req)
             try {
                 await model.save()
                 res.json(model)
@@ -32,13 +35,12 @@ module.exports = function Controller(schema) {
                 .filter(v => v.path in req.body)
 
             if (errors.length)
-                return res.status(400)
-                    .json({ errors })
+                return res.status(400).json({ errors })
             try {
-                const model = await schema.findOne({ _id: req.params.id })
-
-                for (const prop in req.body)
-                    model[prop] = req.body[prop]
+                const model = modelFromRequest(
+                    req,
+                    await schema.findOne({ _id: req.params.id })
+                )
                 await model.save()
 
                 res.json(model)
