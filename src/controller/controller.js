@@ -20,7 +20,7 @@ module.exports = function Controller(schema) {
             const errors = validationResult(req)
             if (!errors.isEmpty())
                 return res.status(400)
-                    .json({ errors: errors.array() })
+                    .json({ error: errors.array() })
 
             const model = modelFromRequest(req)
             try {
@@ -31,11 +31,11 @@ module.exports = function Controller(schema) {
             }
         },
         edit: async (req, res) => {
-            const errors = validationResult(req).array()
+            const error = validationResult(req).array()
                 .filter(v => v.path in req.body)
 
-            if (errors.length)
-                return res.status(400).json({ errors })
+            if (error.length)
+                return res.status(400).json({ error })
             try {
                 const model = modelFromRequest(
                     req,
