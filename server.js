@@ -5,18 +5,21 @@ const mongoose = require('mongoose')
 const routes = require('./routes')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
+const swaggerUi = require('swagger-ui-express');
 const Usuario = require('./src/model/usuario.js')
 
 //conexao com banco dados
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('error', (error) => {
-  console.error("ERRO" + error.message);
+    console.error("ERRO" + error.message);
 });
 
 const app = express()
 app.use(express.json())
 app.use(cors())
+
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(require('./swagger-output.json')))
 
 app.use(async (req, res, next) => {
     if (req.path === '/usuario' && req.method === 'POST' || req.path === '/login')
