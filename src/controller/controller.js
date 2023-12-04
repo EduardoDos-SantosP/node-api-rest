@@ -12,8 +12,16 @@ module.exports = function Controller(schema) {
 
     return {
         all: async (req, res) => {
-            const itens = await schema.find()
-            console.log(itens)
+            const { query } = req
+            try {
+                for (const prop in query)
+                    query[prop] = {
+                        $regex: new RegExp(query[prop], 'i')
+                    }
+            } catch (e) {
+                res.status(400).json({ error: 'Consulta inválida' })
+            }
+            const itens = await schema.find(query)
             res.json(itens)
         },
         add: async (req, res) => {
