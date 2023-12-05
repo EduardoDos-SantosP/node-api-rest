@@ -22,7 +22,7 @@ app.use(cors())
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(require('./swagger-output.json')))
 
 app.use(async (req, res, next) => {
-    if (req.path === '/usuario' && req.method === 'POST' || req.path === '/login')
+    if (req.path.startsWith('/usuario') && req.method === 'POST' || req.path.startsWith('/login'))
         return next()
 
     const token = req.headers.authorization?.replace('Bearer ', '')
