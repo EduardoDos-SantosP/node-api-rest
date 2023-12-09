@@ -1,15 +1,3 @@
-/**
- * post usuario
- * post login
- * get usuario
- * put usuario
- * post servico
- * get servico
- * put servico
- * delete servico
- * delete usuario
- */
-
 require('../server.js')
 const url = 'http://localhost:' + process.env.PORT
 
@@ -56,6 +44,35 @@ describe('Testando fluxo da API', () => {
                 done()
             })
     })
+
+    const servico = {
+        nome: 'Serviço teste',
+        preco: 10
+    }
+    it('Criar serviço', done => {
+        servico.idPrestador = usuario._id
+        client.post('/servico')
+            .set('authorization', token)
+            .send(servico)
+            .end((_, res) => {
+                const body = getBody(res)
+                expect(body).property('_id')
+                servico._id = body._id
+
+                done()
+            })
+    })
+    it('Excluir serviço', done => {
+        client.delete('/servico/' + servico._id)
+            .set('authorization', token)
+            .end((_, res) => {
+                const body = getBody(res)
+                expect(body).property('_id')
+                expect(body._id).equals(servico._id, 'Ids diferentes')
+                done()
+            })
+    })
+
     it('Excluir usuário', done => {
         client.delete('/usuario/' + usuario._id)
             .set('authorization', token)
