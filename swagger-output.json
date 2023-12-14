@@ -132,12 +132,23 @@
       },
       "post": {
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "idPrestador": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Solicitação Inválida"
+          "default": {
+            "description": ""
           }
         }
       }
